@@ -33,7 +33,7 @@ public class PlayerController : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
-        Vector3 movementVector = new Vector3(horizontalInput, 0, verticalInput).normalized;
+        Vector3 movementVector = new Vector3(horizontalInput, 0, verticalInput);
 
         playerRb.AddForce(movementVector); 
     }
