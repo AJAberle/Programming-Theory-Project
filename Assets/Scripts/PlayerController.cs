@@ -9,7 +9,6 @@ public class PlayerController : MonoBehaviour
     private float yBound = -10;
     private Vector3 startPos;
 
-    // Start is called before the first frame update
     void Start()
     {
         playerRb = GetComponent<Rigidbody>();
@@ -17,7 +16,6 @@ public class PlayerController : MonoBehaviour
         startPos = transform.position; 
     }
 
-    // Update is called once per frame
     void Update()
     {
         HandleInput(); 
