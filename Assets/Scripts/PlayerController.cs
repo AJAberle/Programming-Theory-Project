@@ -9,6 +9,8 @@ public class PlayerController : MonoBehaviour
 
     private Rigidbody playerRb;
     private float yBound = -10;
+    private float speed = 2;
+    private bool isDead = false; 
 
     public Vector3 startPos { get; private set; }
 
@@ -31,7 +33,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.gameObject.CompareTag("Projectile"))
+        if(collision.gameObject.CompareTag("Projectile") && !isDead)
         {
             Destroy(collision.gameObject);
             Die(); 
@@ -43,21 +45,24 @@ public class PlayerController : MonoBehaviour
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
 
-        Vector3 movementVector = new Vector3(horizontalInput, 0, verticalInput);
+        Vector3 movementVector = new Vector3(horizontalInput * speed, 0, verticalInput * speed);
 
-        playerRb.AddForce(movementVector); 
+        playerRb.AddForce(movementVector, ForceMode.Force); 
     }
 
     public void Respawn()
     {
+        isDead = false;
         playerRb.velocity = Vector3.zero;
-        playerRb.angularVelocity = Vector3.zero; 
+        playerRb.angularVelocity = Vector3.zero;
         transform.position = startPos; 
     }
 
     void Die()
     {
-        Instantiate(explosion, transform.position, explosion.transform.rotation);
+        isDead = true;
+        explosion.transform.position = transform.position;
+        explosion.gameObject.SetActive(true); 
         GameManager.Instance.PlayerDeath();
         gameObject.SetActive(false);
     }

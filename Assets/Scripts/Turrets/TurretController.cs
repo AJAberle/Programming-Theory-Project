@@ -13,6 +13,7 @@ public class TurretController : MonoBehaviour
 
     [SerializeField] private float range = 10;
     private float resetSpeed = 3;
+    [SerializeField] private float shootDelay = 1; 
 
     private bool isShooting = false;
 
@@ -88,7 +89,7 @@ public class TurretController : MonoBehaviour
     IEnumerator WaitToShoot()
     {
         isShooting = true;
-        yield return new WaitForSeconds(1);
+        yield return new WaitForSeconds(shootDelay);
         ShootWeapon();
         isShooting = false;
     }

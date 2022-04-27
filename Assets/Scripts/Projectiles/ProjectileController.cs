@@ -5,10 +5,10 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class ProjectileController : MonoBehaviour
 {
-    private Rigidbody projectileRb;
-    public GameObject forcePos;
-    private Transform player;
-    [SerializeField] float speed;
+    protected Rigidbody projectileRb;
+    protected Transform player;
+    [SerializeField] protected float speed;
+    public GameObject explosion; 
 
     void Start()
     {
@@ -18,17 +18,22 @@ public class ProjectileController : MonoBehaviour
         projectileRb.AddForce(transform.forward * speed, ForceMode.Impulse);
     }
 
-    private void Update()
+    public virtual void Update()
     {
-        if (player.gameObject.activeInHierarchy == false)
-        {
-            Destroy(gameObject);
-        }
+        DestroyIfPlayerInactive(); 
     }
 
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.name != "Player" && !collision.gameObject.CompareTag("Projectile"))
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    protected void DestroyIfPlayerInactive()
+    {
+        if (player.gameObject.activeInHierarchy == false)
         {
             Destroy(gameObject);
         }
