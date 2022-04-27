@@ -5,9 +5,12 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class PlayerController : MonoBehaviour
 {
+    public GameObject explosion; 
+
     private Rigidbody playerRb;
     private float yBound = -10;
-    private Vector3 startPos;
+
+    public Vector3 startPos { get; private set; }
 
     void Start()
     {
@@ -22,7 +25,16 @@ public class PlayerController : MonoBehaviour
 
         if(transform.position.y < yBound)
         {
-            transform.position = startPos;
+            Die(); 
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.CompareTag("Projectile"))
+        {
+            Destroy(collision.gameObject);
+            Die(); 
         }
     }
 
@@ -34,5 +46,19 @@ public class PlayerController : MonoBehaviour
         Vector3 movementVector = new Vector3(horizontalInput, 0, verticalInput);
 
         playerRb.AddForce(movementVector); 
+    }
+
+    public void Respawn()
+    {
+        playerRb.velocity = Vector3.zero;
+        playerRb.angularVelocity = Vector3.zero; 
+        transform.position = startPos; 
+    }
+
+    void Die()
+    {
+        Instantiate(explosion, transform.position, explosion.transform.rotation);
+        GameManager.Instance.PlayerDeath();
+        gameObject.SetActive(false);
     }
 }

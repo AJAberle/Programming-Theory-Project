@@ -5,13 +5,32 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 public class ProjectileController : MonoBehaviour
 {
-    Rigidbody projectileRb;
+    private Rigidbody projectileRb;
     public GameObject forcePos;
-    [SerializeField] float speed; 
+    private Transform player;
+    [SerializeField] float speed;
 
     void Start()
     {
+        player = GameObject.Find("Player").GetComponent<Transform>();
         projectileRb = GetComponent<Rigidbody>();
-        projectileRb.AddForceAtPosition(transform.up * speed, forcePos.transform.position, ForceMode.Impulse); 
+        transform.LookAt(player);
+        projectileRb.AddForce(transform.forward * speed, ForceMode.Impulse);
+    }
+
+    private void Update()
+    {
+        if (player.gameObject.activeInHierarchy == false)
+        {
+            Destroy(gameObject);
+        }
+    }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.name != "Player" && !collision.gameObject.CompareTag("Projectile"))
+        {
+            Destroy(gameObject);
+        }
     }
 }

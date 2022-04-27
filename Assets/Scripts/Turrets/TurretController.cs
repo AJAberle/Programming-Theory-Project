@@ -7,12 +7,14 @@ public class TurretController : MonoBehaviour
     public Transform resetTarget;
 
     public GameObject projectile;
+    public GameObject shootPoint1;
+    public GameObject shootPoint2;
     private GameObject player;
 
     [SerializeField] private float range = 10;
     private float resetSpeed = 3;
 
-    private bool isShooting = false; 
+    private bool isShooting = false;
 
     private void Start()
     {
@@ -23,21 +25,31 @@ public class TurretController : MonoBehaviour
     {
         Aim();
 
-        if(!isShooting)
+        if (IsPlayerActive())
         {
-            StartCoroutine(WaitToShoot()); 
+            if (!isShooting)
+            {
+                StartCoroutine(WaitToShoot());
+            }
         }
     }
 
     void Aim()
     {
-        if (CalculateDistance() > range)
+        if (IsPlayerActive())
         {
-            ResetRotation();
+            if (CalculateDistance() > range)
+            {
+                ResetRotation();
+            }
+            else
+            {
+                LookAtPlayer();
+            }
         }
         else
         {
-            LookAtPlayer();
+            ResetRotation();
         }
     }
 
@@ -63,7 +75,8 @@ public class TurretController : MonoBehaviour
             if (!hit.transform.gameObject.CompareTag("Obstacle"))
             {
                 Debug.Log("Shooting");
-                Instantiate(projectile, new Vector3(0, 1, 0), projectile.transform.rotation); 
+                Instantiate(projectile, shootPoint1.transform.position, projectile.transform.rotation);
+                Instantiate(projectile, shootPoint2.transform.position, projectile.transform.rotation);
             }
             else
             {
@@ -77,12 +90,17 @@ public class TurretController : MonoBehaviour
         isShooting = true;
         yield return new WaitForSeconds(1);
         ShootWeapon();
-        isShooting = false; 
+        isShooting = false;
     }
 
     float CalculateDistance()
     {
         float distance = Vector3.Distance(player.transform.position, transform.position);
-        return distance; 
+        return distance;
+    }
+
+    bool IsPlayerActive()
+    {
+        return player.gameObject.activeInHierarchy;
     }
 }
