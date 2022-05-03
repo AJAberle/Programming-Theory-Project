@@ -7,35 +7,48 @@ public class ProjectileController : MonoBehaviour
 {
     protected Rigidbody projectileRb;
     protected Transform player;
+    protected GameObject playerObject; 
     [SerializeField] protected float speed;
     public GameObject explosion; 
 
-    void Start()
+    protected virtual void Start()
     {
-        player = GameObject.Find("Player").GetComponent<Transform>();
-        projectileRb = GetComponent<Rigidbody>();
-        transform.LookAt(player);
-        projectileRb.AddForce(transform.forward * speed, ForceMode.Impulse);
+        Initialize(); 
     }
 
-    public virtual void Update()
+    protected virtual void Update()
     {
         DestroyIfPlayerInactive(); 
     }
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.gameObject.name != "Player" && !collision.gameObject.CompareTag("Projectile"))
+        if (collision.gameObject.name != "Player" && !collision.gameObject.CompareTag("Projectile") && !collision.gameObject.CompareTag("Turret"))
         {
-            Destroy(gameObject);
+            DestroyProjectile(); 
         }
     }
 
-    protected void DestroyIfPlayerInactive()
+    public void DestroyIfPlayerInactive()
     {
-        if (player.gameObject.activeInHierarchy == false)
+        if (playerObject.activeInHierarchy == false)
         {
-            Destroy(gameObject);
+            DestroyProjectile(); 
         }
+    }
+
+    protected void DestroyProjectile()
+    {
+        Instantiate(explosion, transform.position, explosion.transform.rotation); 
+        Destroy(gameObject);
+    }
+
+    protected virtual void Initialize()
+    {
+        player = GameObject.Find("Player").GetComponent<Transform>();
+        playerObject = GameObject.Find("Player"); 
+        projectileRb = GetComponent<Rigidbody>();
+        transform.LookAt(playerObject.transform);
+        projectileRb.AddForce(transform.forward * speed, ForceMode.Impulse);
     }
 }

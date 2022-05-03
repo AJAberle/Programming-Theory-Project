@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class TurretController : MonoBehaviour
 {
+    // update weapons to use new shoot point array
+
     public Transform resetTarget;
 
     public GameObject projectile;
-    public GameObject shootPoint1;
-    public GameObject shootPoint2;
+    //public GameObject shootPoint1;
+    //public GameObject shootPoint2;
+    public GameObject[] shootPoints;
     private GameObject player;
 
     [SerializeField] private float range = 10;
@@ -28,9 +31,12 @@ public class TurretController : MonoBehaviour
 
         if (IsPlayerActive())
         {
-            if (!isShooting)
+            if (CalculateDistance() < range)
             {
-                StartCoroutine(WaitToShoot());
+                if (!isShooting)
+                {
+                    StartCoroutine(WaitToShoot());
+                }
             }
         }
     }
@@ -69,19 +75,23 @@ public class TurretController : MonoBehaviour
 
     void ShootWeapon()
     {
-        RaycastHit hit;
-
-        if (Physics.Raycast(transform.position, transform.forward, out hit))
+        if(CalculateDistance() < range)
         {
-            if (!hit.transform.gameObject.CompareTag("Obstacle"))
+            RaycastHit hit;
+
+            if (Physics.Raycast(transform.position, transform.forward, out hit))
             {
-                Debug.Log("Shooting");
-                Instantiate(projectile, shootPoint1.transform.position, projectile.transform.rotation);
-                Instantiate(projectile, shootPoint2.transform.position, projectile.transform.rotation);
-            }
-            else
-            {
-                Debug.Log("Can't shoot");
+                if (!hit.transform.gameObject.CompareTag("Obstacle") && !hit.transform.gameObject.CompareTag("Ground"))
+                {
+                    if(IsPlayerActive())
+                    {
+                        InstantiateProjectiles(); 
+                    }
+                }
+                else
+                {
+                    Debug.Log("Can't shoot");
+                }
             }
         }
     }
@@ -103,5 +113,17 @@ public class TurretController : MonoBehaviour
     bool IsPlayerActive()
     {
         return player.gameObject.activeInHierarchy;
+    }
+
+    void InstantiateProjectiles()
+    {
+        for (int i = 0; i < shootPoints.Length; i++)
+        {
+            Instantiate(projectile, shootPoints[i].transform.position, projectile.transform.rotation); 
+        }
+        /*
+        Instantiate(projectile, shootPoint1.transform.position, projectile.transform.rotation);
+        Instantiate(projectile, shootPoint2.transform.position, projectile.transform.rotation);
+        */
     }
 }

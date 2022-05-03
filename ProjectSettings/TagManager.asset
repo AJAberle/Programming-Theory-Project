@@ -5,6 +5,12 @@ TagManager:
   serializedVersion: 2
   tags:
   - Shootable
+  - Obstacle
+  - Projectile
+  - Ground
+  - Turret
+  - Explosion
+  - Shield
   layers:
   - Default
   - TransparentFX

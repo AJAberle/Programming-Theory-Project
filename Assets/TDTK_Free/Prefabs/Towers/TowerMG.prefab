@@ -322,9 +322,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   resetTarget: {fileID: 1405025380}
   projectile: {fileID: 1000012871492402, guid: 7af6b07676c52b94ba63b3fa7ff7d0fd, type: 3}
-  shootPoint1: {fileID: 100004}
-  shootPoint2: {fileID: 100002}
-  range: 10
+  shootPoints:
+  - {fileID: 100004}
+  - {fileID: 100002}
+  range: 15
+  shootDelay: 1
 --- !u!1 &100010
 GameObject:
   m_ObjectHideFlags: 0

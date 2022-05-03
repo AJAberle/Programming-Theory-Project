@@ -4,10 +4,37 @@ using UnityEngine;
 
 public class RocketController : ProjectileController
 {
-    public override void Update()
+    private float accelerationSpeed = 0.5f;
+    private float followTime = 1.5f;
+    private bool isFollowingPlayer = true;
+
+    protected override void Start()
+    {
+        isFollowingPlayer = true; 
+        Initialize();
+        StartCoroutine(DisableFollowPlayer()); 
+    }
+
+    protected override void Update()
     {
         DestroyIfPlayerInactive();
-        transform.LookAt(player);
-        projectileRb.AddForce(transform.forward * speed, ForceMode.Force); 
+
+        if (isFollowingPlayer && playerObject.activeInHierarchy)
+        {
+            transform.LookAt(playerObject.transform);
+            projectileRb.velocity = transform.forward * speed;
+        }
+        else
+        {
+            projectileRb.AddForce(transform.forward * accelerationSpeed); 
+            projectileRb.angularVelocity = new Vector3(0, 0, 0); 
+        }
+
+    }
+
+    IEnumerator DisableFollowPlayer()
+    {
+        yield return new WaitForSeconds(followTime);
+        isFollowingPlayer = false; 
     }
 }
