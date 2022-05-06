@@ -16,13 +16,4 @@ public class GrenadeExplosion : MonoBehaviour
         yield return new WaitForSeconds(destroyDelay);
         Destroy(gameObject); 
     }
-
-    public void OnCollisionEnter(Collision collision)
-    {
-        if (collision.gameObject.CompareTag("Shield"))
-        {
-            StopAllCoroutines(); 
-            Destroy(gameObject); 
-        }
-    }
 }

@@ -5,33 +5,34 @@ using UnityEngine;
 public class Key : MonoBehaviour
 {
     public Door[] doors;
+    private PlayerController player; 
+    private float rotationSpeed = 15;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-
+        player = GameObject.Find("Player").GetComponent<PlayerController>(); 
     }
 
-    // Update is called once per frame
     void Update()
     {
-
+        transform.Rotate(0, rotationSpeed * Time.deltaTime, 0);
     }
 
     public void UnlockDoor()
     {
+        player.InstantiateCollectEffect(); 
         for (int i = 0; i < doors.Length; i++)
         {
             doors[i].Unlock();
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider collision)
     {
         if (collision.gameObject.name == "Player")
         {
             UnlockDoor();
-            Destroy(gameObject); 
+            gameObject.SetActive(false); 
         }
     }
 }

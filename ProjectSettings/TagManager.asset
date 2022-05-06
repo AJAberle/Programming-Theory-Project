@@ -11,6 +11,10 @@ TagManager:
   - Turret
   - Explosion
   - Shield
+  - ShieldPowerup
+  - Life
+  - Gem1
+  - Gem2
   layers:
   - Default
   - TransparentFX
