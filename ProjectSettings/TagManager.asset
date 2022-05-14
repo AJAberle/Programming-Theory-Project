@@ -15,6 +15,10 @@ TagManager:
   - Life
   - Gem1
   - Gem2
+  - Checkpoint
+  - DoorCollider
+  - Goal
+  - Jumpable
   layers:
   - Default
   - TransparentFX

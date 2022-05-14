@@ -35,6 +35,11 @@ public class ProjectileController : MonoBehaviour
         {
             DestroyProjectile(); 
         }
+
+        if (!playerObject.GetComponent<PlayerController>().canMove)
+        {
+            DestroyProjectile(); 
+        }
     }
 
     protected void DestroyProjectile()

@@ -16,7 +16,7 @@ public class TurretController : MonoBehaviour
 
     [SerializeField] private float range = 10;
     private float resetSpeed = 3;
-    [SerializeField] private float shootDelay = 1; 
+    [SerializeField] private float shootDelay = 1;
 
     private bool isShooting = false;
 
@@ -75,25 +75,29 @@ public class TurretController : MonoBehaviour
 
     void ShootWeapon()
     {
-        if(CalculateDistance() < range)
+        if (player.GetComponent<PlayerController>().canMove)
         {
-            RaycastHit hit;
-
-            if (Physics.Raycast(transform.position, transform.forward, out hit))
+            if (CalculateDistance() < range)
             {
-                if (!hit.transform.gameObject.CompareTag("Obstacle") && !hit.transform.gameObject.CompareTag("Ground"))
+                RaycastHit hit;
+
+                if (Physics.Raycast(transform.position, transform.forward, out hit))
                 {
-                    if(IsPlayerActive())
+                    if (!hit.transform.gameObject.CompareTag("Obstacle") && !hit.transform.gameObject.CompareTag("Ground"))
                     {
-                        InstantiateProjectiles(); 
+                        if (IsPlayerActive())
+                        {
+                            InstantiateProjectiles();
+                        }
                     }
-                }
-                else
-                {
-                    Debug.Log("Can't shoot");
+                    else
+                    {
+                        Debug.Log("Can't shoot");
+                    }
                 }
             }
         }
+
     }
 
     IEnumerator WaitToShoot()
@@ -119,7 +123,7 @@ public class TurretController : MonoBehaviour
     {
         for (int i = 0; i < shootPoints.Length; i++)
         {
-            Instantiate(projectile, shootPoints[i].transform.position, projectile.transform.rotation); 
+            Instantiate(projectile, shootPoints[i].transform.position, projectile.transform.rotation);
         }
         /*
         Instantiate(projectile, shootPoint1.transform.position, projectile.transform.rotation);
