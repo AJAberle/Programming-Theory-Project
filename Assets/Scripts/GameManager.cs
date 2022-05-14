@@ -1,30 +1,38 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement; 
+using UnityEngine.SceneManagement;
 using TMPro;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class GameManager : MonoBehaviour
 {
-    private int score = 0; 
+    private int score = 0;
     private int lives = 1;
-    private int startLives; 
+    private int startLives;
+
+    private bool isPaused = false;
 
     public static GameManager Instance { get; private set; }
 
     [Header("GameObjects")]
+    public GameObject pauseMenu;
     public GameObject deathMenu;
     public GameObject gameOverMenu;
-    public GameObject winMenu; 
+    public GameObject winMenu;
     public GameObject shieldIcon;
+    private GameObject player;
 
     [Header("Text")]
     public TextMeshProUGUI livesText;
     public TextMeshProUGUI scoreText;
 
+    private KeyCode pauseKey = KeyCode.P;
+
     public bool isShieldActivated { get; private set; }
 
-    private GameObject player;
 
     private void Awake()
     {
@@ -40,24 +48,48 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         player = GameObject.Find("Player");
-        startLives = lives; 
+        startLives = lives;
         UpdateText();
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(pauseKey))
+        {
+            PauseGame();
+        }
+    }
+
+    public void PauseGame()
+    {
+        if (isPaused)
+        {
+            isPaused = false;
+            pauseMenu.SetActive(false);
+            Time.timeScale = 1;
+        }
+        else
+        {
+            isPaused = true;
+            pauseMenu.SetActive(true);
+            Time.timeScale = 0;
+        }
     }
 
     public void PlayerDeath()
     {
         if (lives > 0)
         {
-            AddLives(-1); 
-            gameOverMenu.SetActive(false); 
+            AddLives(-1);
+            gameOverMenu.SetActive(false);
             deathMenu.SetActive(true);
         }
         else
         {
             PlayerController playerController = player.GetComponent<PlayerController>();
-            playerController.startPos = playerController.originalPos; 
-            deathMenu.SetActive(false); 
-            gameOverMenu.SetActive(true); 
+            playerController.startPos = playerController.originalPos;
+            deathMenu.SetActive(false);
+            gameOverMenu.SetActive(true);
         }
     }
 
@@ -66,14 +98,31 @@ public class GameManager : MonoBehaviour
         player.SetActive(true);
         deathMenu.SetActive(false);
         gameOverMenu.SetActive(false);
-        winMenu.SetActive(false); 
+        winMenu.SetActive(false);
         player.GetComponent<PlayerController>().Respawn();
         //hello my Bro!!!:D
     }
 
     public void RestartGame()
     {
-        SceneLoader.Instance.LoadScene(SceneManager.GetActiveScene().buildIndex); 
+        Time.timeScale = 1;
+        SceneLoader.Instance.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+
+    public void BackToMenu()
+    {
+        Time.timeScale = 1;
+        SceneLoader.Instance.LoadScene(0);
+    }
+
+    public void QuitGame()
+    {
+        Time.timeScale = 1;
+#if UNITY_EDITOR
+        EditorApplication.ExitPlaymode();
+#else
+        Application.Quit(); 
+#endif
     }
 
     public void ActivateShield()
@@ -94,32 +143,32 @@ public class GameManager : MonoBehaviour
     public void AddLives(int livesToAdd)
     {
         lives += livesToAdd;
-        UpdateText(); 
+        UpdateText();
     }
 
     public void AddScore(int pointsToAdd)
     {
         score += pointsToAdd;
-        UpdateText(); 
+        UpdateText();
     }
 
     private void UpdateText()
     {
         livesText.SetText($"Lives: {lives}");
-        scoreText.SetText($"Score: {score}"); 
+        scoreText.SetText($"Score: {score}");
     }
 
     public void Win()
     {
         Debug.Log("<color=green>You win!</color>");
         deathMenu.SetActive(false);
-        gameOverMenu.SetActive(false); 
+        gameOverMenu.SetActive(false);
         winMenu.SetActive(true);
-        player.GetComponent<PlayerController>().canMove = false; 
+        player.GetComponent<PlayerController>().canMove = false;
     }
 
     public void Checkpoint()
     {
-        player.GetComponent<PlayerController>().Checkpoint(); 
+        player.GetComponent<PlayerController>().Checkpoint();
     }
 }
