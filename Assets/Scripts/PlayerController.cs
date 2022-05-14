@@ -14,7 +14,7 @@ public class PlayerController : MonoBehaviour
     private bool isDead = false;
     private KeyCode jumpKey = KeyCode.Space;
     private bool canJump = false;
-    private float jumpForce = 60;
+    private float jumpForce = 55;
     private bool canDie = true;
     public bool canMove { get; set; } = true;
 
@@ -172,7 +172,7 @@ public class PlayerController : MonoBehaviour
     {
         float horizontalInput = Input.GetAxis("Horizontal");
         float verticalInput = Input.GetAxis("Vertical");
-        float maxSpeed = 12.5f;
+        float maxSpeed = 10;
 
         Vector3 movementVector = new Vector3(horizontalInput * speed, 0, verticalInput * speed);
 

@@ -10,7 +10,7 @@ using UnityEditor;
 public class GameManager : MonoBehaviour
 {
     private int score = 0;
-    private int lives = 1;
+    private int lives = 5;
     private int startLives;
 
     private bool isPaused = false;
