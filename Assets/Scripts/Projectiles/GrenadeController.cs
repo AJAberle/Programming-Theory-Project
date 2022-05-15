@@ -34,6 +34,7 @@ public class GrenadeController : MonoBehaviour
     IEnumerator WaitToExplode()
     {
         yield return new WaitForSeconds(explosionDelay);
+        // ABSTRACTION
         Explode();  
     }
 

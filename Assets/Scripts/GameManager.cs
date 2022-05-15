@@ -15,6 +15,7 @@ public class GameManager : MonoBehaviour
 
     private bool isPaused = false;
 
+    // ENCAPSULATION
     public static GameManager Instance { get; private set; }
 
     [Header("GameObjects")]
@@ -100,7 +101,6 @@ public class GameManager : MonoBehaviour
         gameOverMenu.SetActive(false);
         winMenu.SetActive(false);
         player.GetComponent<PlayerController>().Respawn();
-        //hello my Bro!!!:D
     }
 
     public void RestartGame()

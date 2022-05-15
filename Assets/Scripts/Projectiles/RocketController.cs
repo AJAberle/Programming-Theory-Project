@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+// INHERITANCE
 public class RocketController : ProjectileController
 {
     private float accelerationSpeed = 0.5f;
@@ -15,6 +16,7 @@ public class RocketController : ProjectileController
         StartCoroutine(DisableFollowPlayer()); 
     }
 
+    // POLYMORPHISM
     protected override void Update()
     {
         DestroyIfPlayerInactive();
